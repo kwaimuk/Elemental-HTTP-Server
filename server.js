@@ -20,14 +20,14 @@ const server = http.createServer((req, res) => {
       break;
   }
 });
-const port = 8181;
-server.listen(port, () => {
-  console.log(`Server has started on ${port}!`);
+
+server.listen(8181, () => {
+  console.log("Server has started!");
 });
 
 const checkPath = (path) => {
   if (path === '/') {
-    path = `/index.html`;
+    path = '/index.html';
   }
   return path;
 };
@@ -44,21 +44,21 @@ const notFound = (res) => {
 
 
 const writeResponse = (data, res) => {
+  textarray = data.toString().split("\n");
+  if(textarray[2]=== "<!-- index.html -->"){
+textarray[]=`  <h3>These are ${w}</h3>`;
+  }
   res.writeHead(200, {server:"conan o'brien"});
 let index = JSON.stringify(data.toString());
-
   res.end(data);
 };
 
-const getMethod = (path, res, number) => {
+//
+const getMethod = (path, res) => {
   console.log(path);
   fs.readFile(`public${checkPath(path)}`, (err, data) => {
     if (err) return notFound(res);
-    if(path === `/` ){
-      let indexText=data.toString();
-      indexText.replace("<h3>These are 2</h3>","..")
 
-    }
     return writeResponse(data, res);
   });
 };
@@ -85,5 +85,4 @@ inputElement =(req) =>{
 </html>`);
   });
 };
-
 
