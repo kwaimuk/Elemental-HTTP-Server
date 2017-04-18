@@ -4,9 +4,30 @@ const http = require('http');
 const fs = require('fs');
 const queryString = require('querystring');
 
+const server = http.createServer((req, res) => {
+  switch(req.method) {
+    case 'GET' :
+      getMethod(req.url, res);
+      break;
+    case 'POST' :
+      inputElement(req);
+      break;
+    case 'PUT' :
+
+
+      break;
+    case 'DELETE' :
+      break;
+  }
+});
+const port = 8181;
+server.listen(port, () => {
+  console.log(`Server has started on ${port}!`);
+});
+
 const checkPath = (path) => {
   if (path === '/') {
-    path = '/index.html';
+    path = `/index.html`;
   }
   return path;
 };
@@ -24,20 +45,25 @@ const notFound = (res) => {
 
 const writeResponse = (data, res) => {
   res.writeHead(200, {server:"conan o'brien"});
+let index = JSON.stringify(data.toString());
+
   res.end(data);
 };
 
-//
-const getMethod = (path, res) => {
+const getMethod = (path, res, number) => {
   console.log(path);
   fs.readFile(`public${checkPath(path)}`, (err, data) => {
     if (err) return notFound(res);
+    if(path === `/` ){
+      let indexText=data.toString();
+      indexText.replace("<h3>These are 2</h3>","..")
 
+    }
     return writeResponse(data, res);
   });
 };
 
-quack =(req) =>{
+inputElement =(req) =>{
   req.on('data', (data)=>{
     let postData = data.toString();
     let parseData = queryString.parse(postData);
@@ -60,21 +86,4 @@ quack =(req) =>{
   });
 };
 
-const server = http.createServer((req, res) => {
-  switch(req.method) {
-    case 'GET' :
-      getMethod(req.url, res);
-      break;
-    case 'POST' :
-      quack(req);
-      break;
-    case 'PUT' :
-      break;
-    case 'DELETE' :
-      break;
-  }
-});
 
-server.listen(8181, () => {
-  console.log("Server has started!");
-});
